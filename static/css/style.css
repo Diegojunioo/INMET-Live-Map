@@ -1,0 +1,742 @@
+html,
+body{
+
+    margin:0;
+    padding:0;
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    font-family:"Inter",sans-serif;
+
+    background:#f3f4f6;
+
+}
+
+
+:root{
+
+    --escala-balao:1;
+
+}
+
+
+/* ======================================
+   MAPA
+====================================== */
+
+#map{
+
+    position:fixed;
+
+    top:0;
+    left:230px;
+    right:0;
+    bottom:0;
+
+    transition:left .30s ease;
+
+}
+
+
+/* ======================================
+   SIDEBAR
+====================================== */
+
+#sidebar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:230px;
+    height:100vh;
+
+    box-sizing:border-box;
+
+    background:#ffffff;
+
+    border-right:1px solid #dbe3eb;
+
+    box-shadow:4px 0 15px rgba(0,0,0,.12);
+
+    display:flex;
+
+    flex-direction:column;
+
+    z-index:999;
+
+    transition:left .30s ease;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+}
+
+
+/* ======================================
+   BARRA DE ROLAGEM
+====================================== */
+
+#sidebar::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+
+#sidebar::-webkit-scrollbar-track{
+
+    background:#f1f1f1;
+
+}
+
+
+#sidebar::-webkit-scrollbar-thumb{
+
+    background:#c5c5c5;
+
+    border-radius:10px;
+
+}
+
+
+#sidebar::-webkit-scrollbar-thumb:hover{
+
+    background:#999;
+
+}
+
+
+/* ======================================
+   CABEÇALHO
+====================================== */
+
+.sidebar-header{
+
+    background:#1565C0;
+
+    color:white;
+
+    padding:10px 8px;
+
+    text-align:center;
+
+    flex-shrink:0;
+
+}
+
+
+.sidebar-header h2{
+
+    margin:0;
+
+    font-size:20px;
+
+    line-height:1.2;
+
+}
+
+
+.sidebar-header span{
+
+    display:block;
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    opacity:.9;
+
+}
+
+
+/* ======================================
+   SEÇÕES
+====================================== */
+
+.sidebar-section{
+
+    padding:7px 11px;
+
+    border-bottom:1px solid #ececec;
+
+    box-sizing:border-box;
+
+}
+
+
+.sidebar-section label{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#374151;
+
+}
+
+
+/* ======================================
+   SUBTÍTULO
+====================================== */
+
+.subtitulo{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    font-size:11px !important;
+
+    font-weight:600 !important;
+
+    color:#555 !important;
+
+}
+
+
+/* ======================================
+   CAMPOS
+====================================== */
+
+#parametro,
+#buscar,
+#filtroData,
+#filtroHora,
+#periodoExtremo,
+#parametroExtremo{
+
+    width:100%;
+
+    height:30px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:7px;
+
+    padding:0 8px;
+
+    font-size:12px;
+
+    box-sizing:border-box;
+
+    background:white;
+
+}
+
+
+#parametro:focus,
+#buscar:focus,
+#filtroData:focus,
+#filtroHora:focus,
+#periodoExtremo:focus,
+#parametroExtremo:focus{
+
+    outline:none;
+
+    border-color:#1565C0;
+
+}
+
+
+/* ======================================
+   DADOS EXTREMOS
+====================================== */
+
+#parametroExtremo,
+#periodoExtremo{
+
+    margin-bottom:0;
+
+}
+
+/* ======================================
+   BOTÃO EXTREMOS
+====================================== */
+
+.btn-extremos{
+
+    width:100%;
+
+    margin-top:8px;
+
+    height:31px;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#f57c00;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.btn-extremos:hover{
+
+    background:#ef6c00;
+
+}
+
+/* ======================================
+   botão voltar ao mapa atual
+====================================== */
+
+.btn-mapa-atual{
+
+    width:100%;
+
+    margin-top:8px;
+
+    height:31px;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#f57c00;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.btn-mapa-atual:hover{
+
+    background:#ef6c00;
+
+}
+
+
+/* ======================================
+   FILTROS DE STATUS
+====================================== */
+
+.filtro-status{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:5px;
+
+}
+
+
+.filtro-status button{
+
+    width:100%;
+
+    height:29px;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#edf2f7;
+
+    cursor:pointer;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+
+.filtro-status button:hover{
+
+    background:#dbeafe;
+
+}
+
+
+.filtro-status button.ativo{
+
+    background:#1565C0;
+
+    color:white;
+
+}
+
+
+/* ======================================
+   RODAPÉ
+====================================== */
+
+.sidebar-footer{
+
+    padding:9px;
+
+    border-top:1px solid #ececec;
+
+    box-sizing:border-box;
+
+    background:#ffffff;
+
+}
+
+
+#contador{
+
+    display:block;
+
+    text-align:center;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#1565C0;
+
+}
+
+
+/* ======================================
+   BALÕES
+====================================== */
+
+.icone-estacao{
+
+    background:transparent;
+
+    border:none;
+
+}
+
+
+.balao{
+
+    background:white;
+
+    border:2px solid #1976d2;
+
+    border-radius:8px;
+
+    padding:5px 10px;
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:max-content;
+
+    min-width:55px;
+
+    white-space:nowrap;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+    color:#1976d2;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+
+    transform:scale(var(--escala-balao));
+
+    transition:transform .2s;
+
+}
+
+
+/* ======================================
+   TOOLTIPS
+====================================== */
+
+.leaflet-tooltip{
+
+    background:#ecedf0;
+
+    color:#111827;
+
+    border:none;
+
+    border-radius:6px;
+
+    padding:5px 8px;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+
+}
+
+
+.leaflet-tooltip-top:before{
+
+    border-top-color:#ecedf0;
+
+}
+
+
+/* ======================================
+   BOTÃO MENU
+====================================== */
+
+#btnMenu{
+
+    position:fixed;
+
+    top:15px;
+    left:15px;
+
+    width:44px;
+    height:44px;
+
+    border:none;
+
+    border-radius:9px;
+
+    background:#1565C0;
+
+    color:white;
+
+    font-size:21px;
+
+    cursor:pointer;
+
+    z-index:2000;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.25);
+
+    transition:.25s;
+
+}
+
+
+#btnMenu:hover{
+
+    background:#0D47A1;
+
+}
+
+
+/* ======================================
+   SIDEBAR RECOLHIDA
+====================================== */
+
+body.sidebar-fechada #sidebar{
+
+    left:-230px;
+
+}
+
+
+body.sidebar-fechada #map{
+
+    left:0;
+
+}
+
+
+body.sidebar-fechada #btnMenu{
+
+    left:15px;
+
+}
+
+
+/* ======================================
+   RESPONSIVO
+====================================== */
+
+@media (max-width:900px){
+
+    #sidebar{
+
+        width:100%;
+
+        height:100vh;
+
+        max-height:100vh;
+
+    }
+
+
+    #map{
+
+        left:0;
+
+        top:0;
+
+        height:100vh;
+
+    }
+
+}
+
+/* ======================================
+   CORREÇÃO VISUAL DOS TILES DO LEAFLET
+====================================== */
+
+.leaflet-tile {
+    outline: 1px solid transparent !important;
+    backface-visibility: hidden;
+}
+
+.leaflet-tile-container {
+    backface-visibility: hidden;
+}
+
+.leaflet-zoom-animated {
+    transform-style: preserve-3d;
+}
+
+/* ======================================
+   BARRA DE PROGRESSO DOS EXTREMOS
+====================================== */
+
+#progressoExtremos{
+
+    position:fixed;
+
+    top:20px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:320px;
+
+    padding:12px 15px;
+
+    box-sizing:border-box;
+
+    background:rgba(255,255,255,.97);
+
+    border:1px solid #dbe3eb;
+
+    border-radius:9px;
+
+    box-shadow:0 4px 18px rgba(0,0,0,.22);
+
+    z-index:3000;
+
+}
+
+
+/* ======================================
+   TÍTULO
+====================================== */
+
+.progresso-extremos-titulo{
+
+    margin-bottom:8px;
+
+    text-align:center;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#1565C0;
+
+}
+
+
+/* ======================================
+   TEXTO DO PROGRESSO
+====================================== */
+
+.progresso-extremos-texto{
+
+    margin-bottom:6px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+
+/* ======================================
+   BARRA
+====================================== */
+
+.progresso-extremos-barra{
+
+    width:100%;
+
+    height:10px;
+
+    overflow:hidden;
+
+    background:#e5e7eb;
+
+    border-radius:10px;
+
+}
+
+
+/* ======================================
+   PREENCHIMENTO
+====================================== */
+
+.progresso-extremos-preenchimento{
+
+    width:0%;
+
+    height:100%;
+
+    background:#1565C0;
+
+    border-radius:10px;
+
+    transition:width .35s ease;
+
+}
+
+
+/* ======================================
+   TEMPO
+====================================== */
+
+.progresso-extremos-tempo{
+
+    margin-top:7px;
+
+    text-align:center;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    color:#6b7280;
+
+}

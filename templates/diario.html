@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>📊 Dados Diários - {{ nome_estacao }}</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef2f5;
+            color: #263238;
+        }
+
+
+        /* =========================================
+           CABEÇALHO
+        ========================================= */
+
+        .topo {
+
+            background: linear-gradient(
+                135deg,
+                #2F55D4,
+                #3a67fc
+            );
+
+            color: white;
+
+            padding: 20px 25px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.20);
+
+        }
+
+
+        .topo-conteudo {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            max-width: 1800px;
+
+            margin: auto;
+
+        }
+
+
+        .titulo h1 {
+
+            margin: 0;
+
+            font-size: 26px;
+
+            font-weight: 600;
+
+        }
+
+
+        .titulo .estacao {
+
+            margin-top: 8px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+        }
+
+
+        .titulo .codigo {
+
+            margin-top: 4px;
+
+            font-size: 14px;
+
+            opacity: 0.80;
+
+        }
+
+
+        /* =========================================
+           FILTRO DE DATA
+        ========================================= */
+
+        .filtro-data {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            background: rgba(255,255,255,0.10);
+
+            padding: 12px 14px;
+
+            border-radius: 8px;
+
+        }
+
+
+        .filtro-data label {
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+
+        .filtro-data input {
+
+            padding: 9px 10px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+
+            background: white;
+
+            color: #263238;
+
+        }
+
+
+        .filtro-data button {
+
+            padding: 9px 15px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            background: #ffffff;
+
+            color: #263238;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+
+        }
+
+
+        .filtro-data button:hover {
+
+            background: #eceff1;
+
+        }
+
+
+        /* =========================================
+           CONTEÚDO
+        ========================================= */
+
+        .conteudo {
+
+            max-width: 1800px;
+
+            margin: 20px auto;
+
+            padding: 0 20px;
+
+        }
+
+
+        /* =========================================
+           INFORMAÇÃO
+        ========================================= */
+
+        .info {
+
+            background: white;
+
+            padding: 12px 16px;
+
+            border-radius: 8px;
+
+            margin-bottom: 15px;
+
+            box-shadow:
+                0 1px 5px rgba(0,0,0,0.08);
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================================
+           TABELA
+        ========================================= */
+
+        .tabela-container {
+
+            background: white;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.10);
+
+            overflow: auto;
+
+            max-height: calc(100vh - 190px);
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: separate;
+
+            border-spacing: 0;
+
+            min-width: 1700px;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================================
+           CABEÇALHO DA TABELA
+        ========================================= */
+
+        thead th {
+
+            position: sticky;
+
+            background: #3a67fc;
+
+            color: white;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+            border-right: 1px solid rgba(255,255,255,0.35);
+
+            border-bottom: 1px solid rgba(255,255,255,0.35);
+
+        }
+
+
+        /* Primeira linha */
+
+        thead tr:first-child th {
+
+            top: 0;
+
+            height: 40px;
+
+            padding: 8px 12px;
+
+            font-size: 16px;
+
+        }
+
+
+        /* Segunda linha */
+
+        thead tr:nth-child(2) th {
+
+            top: 40px;
+
+            height: 34px;
+
+            padding: 6px 10px;
+
+            font-size: 14px;
+
+        }
+
+
+        /* Unidades */
+
+        thead .unidade {
+
+            font-size: 12px;
+
+            font-weight: normal;
+
+            opacity: 0.95;
+
+        }
+
+
+        thead th {
+
+            z-index: 5;
+
+        }
+
+
+        thead th:first-child {
+
+            border-top-left-radius: 8px;
+
+        }
+
+
+        thead th:last-child {
+
+            border-right: none;
+
+            border-top-right-radius: 8px;
+
+        }
+
+
+        /* =========================================
+           CÉLULAS
+        ========================================= */
+
+        tbody td {
+
+            padding: 8px 12px;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+            border-bottom: 1px solid #e0e0e0;
+
+            border-right: 1px solid #eeeeee;
+
+        }
+
+
+        tbody td:last-child {
+
+            border-right: none;
+
+        }
+
+
+        tbody tr:nth-child(even) {
+
+            background: #fafafa;
+
+        }
+
+
+        tbody tr:hover {
+
+            background: #f1f5f7;
+
+        }
+
+
+        /* =========================================
+           PRIMEIRAS COLUNAS
+        ========================================= */
+
+        tbody td:first-child {
+
+            font-weight: bold;
+
+        }
+
+
+        tbody td:nth-child(2) {
+
+            font-weight: bold;
+
+        }
+
+
+        /* =========================================
+           MENSAGEM SEM DADOS
+        ========================================= */
+
+        .sem-dados {
+
+            padding: 50px;
+
+            text-align: center;
+
+            font-size: 18px;
+
+            color: #777;
+
+        }
+
+
+        /* =========================================
+           RESPONSIVIDADE
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .topo-conteudo {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+            }
+
+
+            .filtro-data {
+
+                justify-content: center;
+
+                flex-wrap: wrap;
+
+            }
+
+
+            .titulo {
+
+                text-align: center;
+
+            }
+
+
+            .conteudo {
+
+                padding: 0 10px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     CABEÇALHO
+========================================= -->
+
+<header class="topo">
+
+    <div class="topo-conteudo">
+
+
+        <div class="titulo">
+
+            <h1>
+                📊 Dados Diários
+            </h1>
+
+            <div class="estacao">
+                {{ nome_estacao }}
+            </div>
+
+            <div class="codigo">
+                Código da estação: {{ codigo }}
+            </div>
+
+        </div>
+
+
+        <form
+            class="filtro-data"
+            method="GET"
+            action="/diario/{{ codigo }}"
+        >
+
+            <label for="data">
+                📅 Data:
+            </label>
+
+            <input
+                type="date"
+                id="data"
+                name="data"
+                value="{{ data[:4] }}-{{ data[4:6] }}-{{ data[6:8] }}"
+            >
+
+            <button type="submit">
+                🔎 Consultar
+            </button>
+
+        </form>
+
+
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     CONTEÚDO
+========================================= -->
+
+<main class="conteudo">
+
+
+    <div class="info">
+
+        📡 Dados horários registrados pela estação
+        <strong>{{ codigo }}</strong>
+
+        {% if registros %}
+
+            — {{ registros|length }} registros encontrados.
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="tabela-container">
+
+
+        {% if registros %}
+
+
+        <table>
+
+
+            <thead>
+
+                <!-- PRIMEIRA LINHA: GRUPOS -->
+
+                <tr>
+
+                    <th rowspan="2">Data</th>
+
+                    <th rowspan="2">Hora UTC</th>
+
+                    <th colspan="3">Temperatura</th>
+
+                    <th colspan="3">Umidade</th>
+
+                    <th colspan="3">Ponto de Orvalho</th>
+
+                    <th colspan="3">Pressão</th>
+
+                    <th colspan="3">Vento</th>
+
+                    <th rowspan="2">
+                        Radiação<br>
+                        <span class="unidade">(kJ/m²)</span>
+                    </th>
+
+                    <th rowspan="2">
+                        Chuva<br>
+                        <span class="unidade">(mm)</span>
+                    </th>
+
+                </tr>
+
+
+                <!-- SEGUNDA LINHA: SUBPARÂMETROS -->
+
+                <tr>
+
+                    <!-- Temperatura -->
+
+                    <th>Inst.</th>
+                    <th>Máx.</th>
+                    <th>Min.</th>
+
+
+                    <!-- Umidade -->
+
+                    <th>Inst.</th>
+                    <th>Máx.</th>
+                    <th>Min.</th>
+
+
+                    <!-- Orvalho -->
+
+                    <th>Inst.</th>
+                    <th>Máx.</th>
+                    <th>Min.</th>
+
+
+                    <!-- Pressão -->
+
+                    <th>Inst.</th>
+                    <th>Máx.</th>
+                    <th>Min.</th>
+
+
+                    <!-- Vento -->
+
+                    <th>Vel.</th>
+                    <th>Dir.(°)</th>
+                    <th>Raj.</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for registro in registros %}
+
+
+                <tr>
+
+
+                    <td>
+                        {% if registro.data %}
+                        {{ registro.data[8:10] }}/{{ registro.data[5:7] }}/{{ registro.data[0:4] }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+
+                    <td>
+                        {{ registro.hora or "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.temperatura
+                           if registro.temperatura is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.temperatura_maxima
+                           if registro.temperatura_maxima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.temperatura_minima
+                           if registro.temperatura_minima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.umidade
+                           if registro.umidade is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.umidade_maxima
+                           if registro.umidade_maxima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.umidade_minima
+                           if registro.umidade_minima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.ponto_orvalho
+                           if registro.ponto_orvalho is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.ponto_orvalho_maximo
+                           if registro.ponto_orvalho_maximo is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.ponto_orvalho_minimo
+                           if registro.ponto_orvalho_minimo is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.pressao
+                           if registro.pressao is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.pressao_maxima
+                           if registro.pressao_maxima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.pressao_minima
+                           if registro.pressao_minima is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.vento
+                           if registro.vento is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.vento_direcao
+                           if registro.vento_direcao is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ registro.rajada
+                           if registro.rajada is not none
+                           else "-" }}
+                    </td>
+
+
+                    <td>
+
+                        {% if registro.radiacao is not none %}
+
+                            {{ "%.1f"|format(registro.radiacao) }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if registro.chuva is not none %}
+
+                            {{ "%.1f"|format(registro.chuva) }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+        {% else %}
+
+
+        <div class="sem-dados">
+
+            ⚠️ Nenhum dado encontrado para esta estação
+            na data selecionada.
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

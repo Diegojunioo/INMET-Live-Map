@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>DADOS INMET</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/popup.css') }}">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/markers.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+
+<div id="sidebar">
+
+    <div class="sidebar-header">
+
+        <h2>🌤️ DADOS INMET</h2>
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <label>📊 Dados Extremos</label>
+
+        <label class="subtitulo" style="margin-top:12px;">
+            Parâmetro
+        </label>
+
+        <select id="parametroExtremo">
+
+            <option value="temperatura_maxima">🔥 Temperatura Máxima</option>
+
+            <option value="temperatura_minima">❄️ Temperatura Mínima</option>
+
+            <option value="umidade_maxima">💧 Umidade Máxima</option>
+
+            <option value="umidade_minima">💧 Umidade Mínima</option>
+
+            <option value="chuva">🌧️ Chuva</option>
+
+            <option value="rajada">🌪️ Rajada</option>
+
+            <option value="vento">💨 Vento</option>
+
+            <option value="radiacao">☀️ Radiação</option>
+
+        </select>
+
+        <label class="subtitulo" style="margin-top:12px;">
+            Período
+        </label>
+
+        <select id="periodoExtremo">
+
+            <option value="diario">📅 Diário</option>
+
+            <option value="mensal">📆 Mensal</option>
+
+            <option value="anual">🗓️ Anual</option>
+
+        </select>
+
+        <label id="labelDataExtremo" class="subtitulo" style="margin-top:12px;">
+            Data
+        </label>
+
+        <input
+            type="date"
+            id="dataExtremo"
+        >
+
+        <button id="btnExtremos" class="btn-extremos">
+
+            🔎 Buscar Extremos
+
+        </button>
+
+        <button id="btnMapaAtual" class="btn-mapa-atual">
+            ⬅️ Voltar ao Mapa Atual
+        </button>
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <label>📊 Dados das Estações</label>
+
+        <label class="subtitulo" style="margin-top:12px;">
+            Parâmetro
+        </label>
+
+        <select id="parametro">
+            <option value="temperatura">🌡️ Temperatura</option>
+            <option value="temperatura_maxima">🔥 Temperatura Máxima</option>
+            <option value="temperatura_minima">❄️ Temperatura Mínima</option>
+            <option value="umidade_maxima">💧 Umidade Máxima</option>
+            <option value="umidade_minima">💧 Umidade Mínima</option>
+            <option value="vento">💨 Vento Velocidade</option>
+            <option value="vento_direcao">🧭 Direção do Vento</option>
+            <option value="rajada">🌪️ Rajada do Vento</option>
+            <option value="radiacao">☀️ Radiação</option>
+            <option value="chuva">🌧️ Chuva</option>
+        </select>
+
+    </div>
+
+
+    <div class="sidebar-section">
+
+        <label class="subtitulo" style="margin-top:12px;">
+            📅 Data
+        </label>
+
+        <input
+            type="date"
+            id="filtroData"
+        >
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <label class="subtitulo" style="margin-top:12px;">
+            ⏰ Hora (UTC)
+        </label>
+
+        <select id="filtroHora">
+
+            <option value="">Último</option>
+
+            <option value="0000">00 UTC</option>
+            <option value="0100">01 UTC</option>
+            <option value="0200">02 UTC</option>
+            <option value="0300">03 UTC</option>
+            <option value="0400">04 UTC</option>
+            <option value="0500">05 UTC</option>
+            <option value="0600">06 UTC</option>
+            <option value="0700">07 UTC</option>
+            <option value="0800">08 UTC</option>
+            <option value="0900">09 UTC</option>
+            <option value="1000">10 UTC</option>
+            <option value="1100">11 UTC</option>
+            <option value="1200">12 UTC</option>
+            <option value="1300">13 UTC</option>
+            <option value="1400">14 UTC</option>
+            <option value="1500">15 UTC</option>
+            <option value="1600">16 UTC</option>
+            <option value="1700">17 UTC</option>
+            <option value="1800">18 UTC</option>
+            <option value="1900">19 UTC</option>
+            <option value="2000">20 UTC</option>
+            <option value="2100">21 UTC</option>
+            <option value="2200">22 UTC</option>
+            <option value="2300">23 UTC</option>
+
+        </select>
+
+    </div>
+
+    <div class="sidebar-section">
+
+        
+        <label class="subtitulo" style="margin-top:12px;">
+            🔍 Pesquisar estação
+        </label>
+
+        <input
+            id="buscar"
+            type="text"
+            placeholder="Nome, código ou UF"
+        >
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <label>📡 Status</label>
+
+        <div class="filtro-status">
+
+            <button id="btnTodas" class="ativo">⚪ Todas</button>
+
+            <button id="btnOnline">🟢 Online</button>
+
+            <button id="btnAtraso">🟠 Atrasadas</button>
+
+            <button id="btnOffline">🔴 Offline</button>
+
+        </div>
+
+    </div>
+
+    <div class="sidebar-footer">
+
+        <span id="contador">
+            📡 0 estações
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<div id="map"></div>
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Arquivos do projeto -->
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/estado.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/cores.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/markerIcon.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/markers.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/filtros.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/mapa.js') }}"></script>
+
+</body>
+
+</html>

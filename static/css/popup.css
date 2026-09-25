@@ -1,0 +1,149 @@
+.popup-card{
+
+    width:300px;
+
+    font-family:Segoe UI,Arial,sans-serif;
+
+}
+
+.popup-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+}
+
+.popup-header h3{
+
+    margin:0;
+
+    font-size:19px;
+
+    color:#222;
+
+}
+
+.popup-header small{
+
+    color:#666;
+
+    font-size:13px;
+
+}
+
+.popup-status{
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+.popup-status.online{
+
+    color:#2e7d32;
+
+}
+
+.popup-status.atraso{
+
+    color:#ef6c00;
+
+}
+
+.popup-status.offline{
+
+    color:#c62828;
+
+}
+
+.popup-card hr{
+
+    border:none;
+
+    border-top:1px solid #ececec;
+
+    margin:12px 0;
+
+}
+
+.popup-info{
+
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    row-gap:4px;
+
+}
+
+.popup-info strong{
+
+    color:#222;
+
+}
+
+.popup-dados{
+
+    display:grid;
+
+    row-gap:8px;
+
+}
+
+.popup-linha{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.popup-linha span:first-child{
+
+    color:#444;
+
+}
+
+.popup-linha strong{
+
+    color:#222;
+
+}
+
+.popup-btn{
+
+    display:block;
+
+    margin-top:18px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    background:#2F55D4;
+
+    color:#fff !important;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:.25s;
+
+}
+
+.popup-btn:hover{
+
+    background:#2445b5;
+
+    transform:translateY(-2px);
+
+}
