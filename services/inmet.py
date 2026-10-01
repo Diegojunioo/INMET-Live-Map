@@ -916,9 +916,17 @@ def unir_estacoes_extremos(
 
 def obter_dados_diarios(codigo, data):
 
-    registros = []
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import requests
+    import time
 
-    for hora in range(24):
+    registros_por_hora = {}
+
+    # =========================================================
+    # CONSULTA UMA HORA
+    # =========================================================
+
+    def consultar_hora(hora):
 
         hora_formatada = f"{hora:02d}00"
 
@@ -927,22 +935,15 @@ def obter_dados_diarios(codigo, data):
             f"{data}/{hora_formatada}/{INMET_TOKEN}"
         )
 
-        dados = None
-
-        # -------------------------------------------------
-        # TENTA CONSULTAR A API ATÉ 3 VEZES
-        # -------------------------------------------------
-
-        for tentativa in range(3):
+        for tentativa in range(2):
 
             try:
 
                 resposta = requests.get(
                     url,
-                    timeout=TIMEOUT
+                    timeout=(3, 7)
                 )
 
-                # Se a API respondeu com erro HTTP
                 if resposta.status_code != 200:
 
                     print(
@@ -950,58 +951,117 @@ def obter_dados_diarios(codigo, data):
                         f"-> HTTP {resposta.status_code}"
                     )
 
-                    time.sleep(0.5)
-
                     continue
 
-                # Verifica se existe conteúdo
                 if not resposta.text.strip():
 
                     print(
                         f"{data} {hora_formatada} "
                         f"-> resposta vazia "
-                        f"(tentativa {tentativa + 1}/3)"
+                        f"(tentativa {tentativa + 1}/2)"
                     )
-
-                    time.sleep(0.5)
 
                     continue
 
-                # Tenta interpretar como JSON
                 dados = resposta.json()
 
-                break
+                # Procura somente a estação solicitada
+                for e in dados:
+
+                    if e.get("CD_ESTACAO") == codigo:
+                        return hora, hora_formatada, e
+
+                # API respondeu, mas a estação não estava nos dados
+                return hora, hora_formatada, None
+
+            except requests.exceptions.Timeout:
+
+                print(
+                    f"{data} {hora_formatada} "
+                    f"-> timeout "
+                    f"(tentativa {tentativa + 1}/2)"
+                )
+
+            except requests.exceptions.RequestException as erro:
+
+                print(
+                    f"{data} {hora_formatada} "
+                    f"-> erro de conexão "
+                    f"(tentativa {tentativa + 1}/2): {erro}"
+                )
+
+            except ValueError as erro:
+
+                print(
+                    f"{data} {hora_formatada} "
+                    f"-> JSON inválido "
+                    f"(tentativa {tentativa + 1}/2): {erro}"
+                )
 
             except Exception as erro:
 
                 print(
                     f"{data} {hora_formatada} "
-                    f"-> tentativa {tentativa + 1}/3: {erro}"
+                    f"-> erro inesperado "
+                    f"(tentativa {tentativa + 1}/2): {erro}"
                 )
 
-                time.sleep(0.5)
+        return hora, hora_formatada, None
 
 
-        # -------------------------------------------------
-        # SE NÃO CONSEGUIU DADOS
-        # -------------------------------------------------
+    # =========================================================
+    # CONSULTA AS 24 HORAS EM PARALELO
+    # =========================================================
+
+    with ThreadPoolExecutor(max_workers=6) as executor:
+
+        tarefas = [
+            executor.submit(consultar_hora, hora)
+            for hora in range(24)
+        ]
+
+        for tarefa in as_completed(tarefas):
+
+            try:
+
+                hora, hora_formatada, registro = tarefa.result()
+
+                registros_por_hora[hora] = (
+                    hora_formatada,
+                    registro
+                )
+
+            except Exception as erro:
+
+                print(
+                    f"{data} -> erro ao processar consulta: {erro}"
+                )
+
+
+    # =========================================================
+    # MONTA OS 24 REGISTROS NA ORDEM CORRETA
+    # =========================================================
+
+    registros = []
+
+    for hora in range(24):
+
+        hora_formatada = f"{hora:02d}00"
 
         registro_encontrado = None
 
-        if dados:
+        if hora in registros_por_hora:
 
-            for e in dados:
+            hora_api, registro_encontrado = (
+                registros_por_hora[hora]
+            )
 
-                if e.get("CD_ESTACAO") == codigo:
-
-                    registro_encontrado = e
-
-                    break
+            hora_formatada = hora_api
 
 
-        # -------------------------------------------------
-        # MONTA O REGISTRO
-        # -------------------------------------------------
+        # -----------------------------------------------------
+        # ESTAÇÃO ENCONTRADA
+        # -----------------------------------------------------
 
         if registro_encontrado:
 
@@ -1093,20 +1153,19 @@ def obter_dados_diarios(codigo, data):
                 )
             })
 
-        else:
 
-            # -------------------------------------------------
-            # MANTÉM O HORÁRIO MESMO SEM DADOS
-            # -------------------------------------------------
+        # -----------------------------------------------------
+        # SEM DADOS
+        # -----------------------------------------------------
+
+        else:
 
             registros.append({
 
                 "nome_estacao": None,
-
                 "uf": None,
 
                 "data": data,
-
                 "hora": hora_formatada,
 
                 "temperatura": None,
@@ -1133,10 +1192,6 @@ def obter_dados_diarios(codigo, data):
 
                 "chuva": None
             })
-
-
-        # Pequena pausa antes da próxima hora
-        time.sleep(0.2)
 
 
     return registros
